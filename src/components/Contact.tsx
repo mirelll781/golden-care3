@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React from 'react';
+import { motion } from 'motion/react';
 import {
   Phone,
   Mail,
@@ -7,12 +7,10 @@ import {
   MessageCircle,
   Facebook,
   Instagram,
-  Send,
-  CheckCircle,
-  Heart,
   Sparkles,
+  Heart,
+  Clock,
 } from 'lucide-react';
-import { ContactFormData } from '../types';
 
 function ViberIcon({ size = 16 }: { size?: number }) {
   return (
@@ -30,79 +28,6 @@ function ViberIcon({ size = 16 }: { size?: number }) {
 }
 
 export default function Contact() {
-  const [formData, setFormData] = useState<ContactFormData>({
-    fullName: '',
-    email: '',
-    phone: '',
-    message: '',
-    serviceInterest: '',
-  });
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [website, setWebsite] = useState(''); // Honeypot state for spam bot detection
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  const servicesList = [
-    'Posredovanje pri zapošljavanju njegovatelja',
-    'Organizacija kućne njege',
-    'Njega starijih osoba',
-    'Pomoć u domaćinstvu',
-    'Priprema obroka',
-    'Kupovina i nabavka',
-    'Pratnja ljekaru',
-    'Zamjena njegovatelja',
-    'Savjetovanje porodica',
-    'Podrška tokom cijelog angažmana',
-  ];
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setErrorMessage(null);
-
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          website, // Honeypot field
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Došlo je do greške prilikom slanja poruke.');
-      }
-
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-      // Reset form
-      setFormData({
-        fullName: '',
-        email: '',
-        phone: '',
-        message: '',
-        serviceInterest: '',
-      });
-      setWebsite('');
-    } catch (err: any) {
-      setIsSubmitting(false);
-      setErrorMessage(err.message || 'Došlo je do greške prilikom povezivanja sa serverom. Molimo pokušajte ponovo.');
-    }
-  };
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
   return (
     <section id="kontakt" className="py-24 bg-white relative overflow-hidden">
       {/* Decorative gradients */}
@@ -110,37 +35,43 @@ export default function Contact() {
       <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-gold-100/10 rounded-full blur-3xl pointer-events-none -z-10" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
-          
-          {/* Left Column: Info & Actions */}
-          <div className="lg:col-span-5 space-y-10" id="contact-info-panel">
-            <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 text-gold-500 font-semibold text-xs uppercase tracking-widest">
-                <Sparkles size={14} />
-                <span>Kontakt informacije</span>
-              </div>
-              <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
-                Obratite nam se s povjerenjem
-              </h2>
-              <div className="h-1 w-20 bg-gold-gradient rounded-full" />
-              <p className="font-sans text-slate-500 font-light text-sm sm:text-base leading-relaxed">
-                Naš stručni tim vam stoji na raspolaganju za sve informacije, stručne savjete i organizaciju kućne njege u Tuzli i okolini. Tu smo da saslušamo vaše potrebe.
-              </p>
-            </div>
+        
+        {/* Header section (centered) */}
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+          <div className="inline-flex items-center gap-2 text-gold-500 font-semibold text-xs uppercase tracking-widest justify-center">
+            <Sparkles size={14} />
+            <span>Kontakt informacije</span>
+          </div>
+          <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
+            Obratite nam se s povjerenjem
+          </h2>
+          <div className="h-1 w-20 bg-gold-gradient rounded-full mx-auto" />
+          <p className="font-sans text-slate-500 font-light text-sm sm:text-base leading-relaxed">
+            Naš stručni tim vam stoji na raspolaganju za sve informacije, stručne savjete i organizaciju kućne njege u Tuzli i okolini. Tu smo da saslušamo vaše potrebe i osiguramo vrhunsku brigu za Vaše najmilije.
+          </p>
+        </div>
 
-            {/* Direct Contact Blocks */}
+        {/* Reorganized contact panel grid without form */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          
+          {/* Column 1: Core Contact Details (Phone, Email, Location) */}
+          <div className="space-y-6">
+            <h3 className="font-display text-lg font-bold text-slate-900 border-l-4 border-gold-500 pl-3">
+              Direktni kontakti
+            </h3>
+            
             <div className="space-y-6" id="contact-cards">
               {/* Phone Card */}
               <a
                 href="tel:+38761509570"
-                className="flex items-center gap-5 p-5 rounded-2xl border border-slate-100 hover:border-gold-300 hover:bg-gold-50/15 transition-all duration-300 group"
+                className="flex items-center gap-5 p-6 rounded-2xl border border-slate-100 hover:border-gold-300 hover:bg-gold-50/15 transition-all duration-300 group shadow-sm bg-slate-50/30"
               >
                 <div className="p-4 rounded-xl bg-gold-50 text-gold-500 group-hover:bg-gold-500 group-hover:text-white transition-all duration-300 flex-shrink-0">
-                  <Phone size={20} className="animate-pulse" />
+                  <Phone size={22} className="animate-pulse" />
                 </div>
                 <div>
                   <h4 className="font-sans text-[11px] font-bold uppercase tracking-wider text-slate-400">Telefon</h4>
-                  <p className="font-display text-lg font-bold text-slate-900 mt-1">+387 61 509 570</p>
+                  <p className="font-display text-xl font-bold text-slate-900 mt-1">+387 61 509 570</p>
                   <span className="font-sans text-xs text-gold-600 font-medium">Pozovite nas direktno</span>
                 </div>
               </a>
@@ -148,41 +79,75 @@ export default function Contact() {
               {/* Email Card */}
               <a
                 href="mailto:goldencare.tuzla@gmail.com"
-                className="flex items-center gap-5 p-5 rounded-2xl border border-slate-100 hover:border-gold-300 hover:bg-gold-50/15 transition-all duration-300 group"
+                className="flex items-center gap-5 p-6 rounded-2xl border border-slate-100 hover:border-gold-300 hover:bg-gold-50/15 transition-all duration-300 group shadow-sm bg-slate-50/30"
               >
                 <div className="p-4 rounded-xl bg-gold-50 text-gold-500 group-hover:bg-gold-500 group-hover:text-white transition-all duration-300 flex-shrink-0">
-                  <Mail size={20} />
+                  <Mail size={22} />
                 </div>
                 <div>
                   <h4 className="font-sans text-[11px] font-bold uppercase tracking-wider text-slate-400">Email</h4>
-                  <p className="font-display text-lg font-bold text-slate-900 mt-1 break-all">goldencare.tuzla@gmail.com</p>
+                  <p className="font-display text-xl font-bold text-slate-900 mt-1 break-all">goldencare.tuzla@gmail.com</p>
                   <span className="font-sans text-xs text-gold-600 font-medium">Pošaljite nam upit</span>
                 </div>
               </a>
 
               {/* Location Card */}
-              <div className="flex items-center gap-5 p-5 rounded-2xl border border-slate-100">
+              <div className="flex items-center gap-5 p-6 rounded-2xl border border-slate-100 shadow-sm bg-slate-50/30">
                 <div className="p-4 rounded-xl bg-gold-50 text-gold-500 flex-shrink-0">
-                  <MapPin size={20} />
+                  <MapPin size={22} />
                 </div>
                 <div>
                   <h4 className="font-sans text-[11px] font-bold uppercase tracking-wider text-slate-400">Sjedište</h4>
-                  <p className="font-display text-lg font-bold text-slate-900 mt-1">Tuzla, Bosna i Hercegovina</p>
+                  <p className="font-display text-xl font-bold text-slate-900 mt-1">Tuzla, Bosna i Hercegovina</p>
                   <span className="font-sans text-xs text-slate-500 font-light">Usluga dostupna širom BiH i EU</span>
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Social & Communication Actions */}
-            <div className="space-y-4" id="social-buttons-panel">
-              <h4 className="font-display text-sm font-bold text-slate-900 tracking-wide">Povežite se s nama putem mreža:</h4>
-              <div className="flex flex-wrap gap-4" id="social-cta-buttons">
+          {/* Column 2: Working Hours & Socials */}
+          <div className="space-y-6">
+            <h3 className="font-display text-lg font-bold text-slate-900 border-l-4 border-gold-500 pl-3">
+              Radno vrijeme & Povezivanje
+            </h3>
+
+            {/* Working Hours Card */}
+            <div className="p-6 rounded-2xl border border-slate-100 bg-slate-50/30 shadow-sm space-y-4">
+              <div className="flex items-center gap-3 text-gold-500">
+                <Clock size={20} />
+                <h4 className="font-display text-sm font-bold text-slate-900">Naše radno vrijeme</h4>
+              </div>
+              <div className="space-y-2.5 divide-y divide-slate-100 font-sans text-sm text-slate-600">
+                <div className="flex justify-between items-center pt-2">
+                  <span className="font-medium text-slate-700">Ponedjeljak - Petak:</span>
+                  <span>08:00 - 17:00</span>
+                </div>
+                <div className="flex justify-between items-center pt-2">
+                  <span className="font-medium text-slate-700">Subota:</span>
+                  <span>08:00 - 14:00</span>
+                </div>
+                <div className="flex justify-between items-center pt-2">
+                  <span className="font-medium text-slate-700">Nedjelja:</span>
+                  <span className="text-gold-600 font-medium bg-gold-50 px-2 py-0.5 rounded text-xs">Dežurni telefon za hitne slučajeve 24/7</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Social Networks Panel */}
+            <div className="p-6 rounded-2xl border border-slate-100 bg-slate-50/30 shadow-sm space-y-4" id="social-buttons-panel">
+              <h4 className="font-display text-sm font-bold text-slate-900 tracking-wide">
+                Kontaktirajte nas putem društvenih mreža
+              </h4>
+              <p className="font-sans text-xs text-slate-400 font-light">
+                Kliknite na neku od opcija ispod kako biste započeli direktan chat ili posjetili naš profil.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" id="social-cta-buttons">
                 {/* WhatsApp Button */}
                 <a
                   href="https://wa.me/38761509570"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 bg-emerald-500 text-white rounded-full text-xs font-bold uppercase tracking-wider hover:bg-emerald-600 hover:-translate-y-0.5 transition-all duration-300 shadow-md shadow-emerald-500/10"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-emerald-500 text-white rounded-full text-xs font-bold uppercase tracking-wider hover:bg-emerald-600 hover:-translate-y-0.5 transition-all duration-300 shadow-md shadow-emerald-500/10"
                 >
                   <MessageCircle size={16} />
                   <span>WhatsApp Chat</span>
@@ -193,7 +158,7 @@ export default function Contact() {
                   href="viber://chat?number=%2B38761509570"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#7360F2] text-white rounded-full text-xs font-bold uppercase tracking-wider hover:bg-[#5946D2] hover:-translate-y-0.5 transition-all duration-300 shadow-md shadow-indigo-500/10"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-[#7360F2] text-white rounded-full text-xs font-bold uppercase tracking-wider hover:bg-[#5946D2] hover:-translate-y-0.5 transition-all duration-300 shadow-md shadow-indigo-500/10"
                 >
                   <ViberIcon size={16} />
                   <span>Viber Chat</span>
@@ -204,7 +169,7 @@ export default function Contact() {
                   href="https://www.facebook.com/profile.php?id=61591861043872"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#1877F2] text-white rounded-full text-xs font-bold uppercase tracking-wider hover:bg-[#1565C0] hover:-translate-y-0.5 transition-all duration-300 shadow-md shadow-blue-500/10"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-[#1877F2] text-white rounded-full text-xs font-bold uppercase tracking-wider hover:bg-[#1565C0] hover:-translate-y-0.5 transition-all duration-300 shadow-md shadow-blue-500/10"
                 >
                   <Facebook size={16} />
                   <span>Facebook profil</span>
@@ -215,187 +180,36 @@ export default function Contact() {
                   href="https://www.instagram.com/goldencare_tuzla/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] text-white rounded-full text-xs font-bold uppercase tracking-wider hover:-translate-y-0.5 transition-all duration-300 shadow-md shadow-purple-500/10"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] text-white rounded-full text-xs font-bold uppercase tracking-wider hover:-translate-y-0.5 transition-all duration-300 shadow-md shadow-purple-500/10"
                 >
                   <Instagram size={16} />
                   <span>Instagram</span>
                 </a>
               </div>
             </div>
+
           </div>
+        </div>
 
-          {/* Right Column: Premium Interactive Form */}
-          <div className="lg:col-span-7" id="contact-form-panel">
-            <div className="relative bg-gradient-to-b from-slate-50/60 to-slate-50/20 rounded-[2.5rem] border border-slate-100 p-8 sm:p-10 shadow-sm overflow-hidden">
-              <AnimatePresence mode="wait">
-                {!isSubmitted ? (
-                  <motion.form
-                    initial={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    onSubmit={handleSubmit}
-                    className="space-y-6"
-                    id="golden-care-inquiry-form"
-                  >
-                    <div className="space-y-1">
-                      <h3 className="font-display text-xl font-bold text-slate-900">Pošaljite nam direktnu poruku</h3>
-                      <p className="font-sans text-xs text-slate-400 font-light">Ispunite formu ispod i naš koordinator će Vas ubrzo pozvati.</p>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                      {/* Name */}
-                      <div className="flex flex-col gap-2">
-                        <label htmlFor="fullName" className="font-sans text-xs font-bold uppercase tracking-wider text-slate-700">Ime i Prezime *</label>
-                        <input
-                          required
-                          type="text"
-                          id="fullName"
-                          name="fullName"
-                          value={formData.fullName}
-                          onChange={handleInputChange}
-                          placeholder="npr. Amila Mujkić"
-                          className="px-5 py-3.5 rounded-2xl border border-slate-200 bg-white focus:border-gold-400 focus:ring-1 focus:ring-gold-400 focus:outline-none transition-all text-sm"
-                        />
-                      </div>
-
-                      {/* Phone */}
-                      <div className="flex flex-col gap-2">
-                        <label htmlFor="phone" className="font-sans text-xs font-bold uppercase tracking-wider text-slate-700">Telefon *</label>
-                        <input
-                          required
-                          type="tel"
-                          id="phone"
-                          name="phone"
-                          value={formData.phone}
-                          onChange={handleInputChange}
-                          placeholder="npr. +387 61 123 456"
-                          className="px-5 py-3.5 rounded-2xl border border-slate-200 bg-white focus:border-gold-400 focus:ring-1 focus:ring-gold-400 focus:outline-none transition-all text-sm"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                      {/* Email */}
-                      <div className="flex flex-col gap-2">
-                        <label htmlFor="email" className="font-sans text-xs font-bold uppercase tracking-wider text-slate-700">Email adresa</label>
-                        <input
-                          type="email"
-                          id="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          placeholder="npr. amila@example.com"
-                          className="px-5 py-3.5 rounded-2xl border border-slate-200 bg-white focus:border-gold-400 focus:ring-1 focus:ring-gold-400 focus:outline-none transition-all text-sm"
-                        />
-                      </div>
-
-                      {/* Service Dropdown */}
-                      <div className="flex flex-col gap-2">
-                        <label htmlFor="serviceInterest" className="font-sans text-xs font-bold uppercase tracking-wider text-slate-700">Usluga koja Vas zanima *</label>
-                        <select
-                          required
-                          id="serviceInterest"
-                          name="serviceInterest"
-                          value={formData.serviceInterest}
-                          onChange={handleInputChange}
-                          className="px-5 py-3.5 rounded-2xl border border-slate-200 bg-white focus:border-gold-400 focus:ring-1 focus:ring-gold-400 focus:outline-none transition-all text-sm appearance-none cursor-pointer"
-                        >
-                          <option value="">-- Odaberite uslugu --</option>
-                          {servicesList.map((service, idx) => (
-                            <option key={idx} value={service}>
-                              {service}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-
-                    {/* Message */}
-                    <div className="flex flex-col gap-2">
-                      <label htmlFor="message" className="font-sans text-xs font-bold uppercase tracking-wider text-slate-700">Opis Vaših potreba / Poruka *</label>
-                      <textarea
-                        required
-                        id="message"
-                        name="message"
-                        rows={4}
-                        value={formData.message}
-                        onChange={handleInputChange}
-                        placeholder="Molimo vas opišite nam potrebe Vašeg člana porodice (zdravstveno stanje, obim brige, vremenski raspored...)"
-                        className="px-5 py-4 rounded-2xl border border-slate-200 bg-white focus:border-gold-400 focus:ring-1 focus:ring-gold-400 focus:outline-none transition-all text-sm resize-none"
-                      />
-                    </div>
-
-                    {/* Honeypot field - hidden from human users */}
-                    <div className="absolute opacity-0 pointer-events-none -z-10 w-0 h-0 overflow-hidden" aria-hidden="true">
-                      <label htmlFor="website">Website URL</label>
-                      <input
-                        type="text"
-                        id="website"
-                        name="website"
-                        value={website}
-                        onChange={(e) => setWebsite(e.target.value)}
-                        tabIndex={-1}
-                        autoComplete="off"
-                      />
-                    </div>
-
-                    {/* Error Banner */}
-                    {errorMessage && (
-                      <div className="p-4 bg-rose-50 text-rose-600 rounded-2xl text-xs font-semibold border border-rose-100 flex items-center gap-2">
-                        <span>{errorMessage}</span>
-                      </div>
-                    )}
-
-                    {/* Submit Button */}
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-full relative overflow-hidden group bg-gold-500 disabled:bg-gold-300 text-white py-4 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 shadow-lg shadow-gold-500/10 hover:shadow-xl hover:shadow-gold-500/20 hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                          </svg>
-                          <span>Slanje u toku...</span>
-                        </>
-                      ) : (
-                        <>
-                          <span>Pošaljite zahtjev</span>
-                          <Send size={14} className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-0.5" />
-                        </>
-                      )}
-                    </button>
-                  </motion.form>
-                ) : (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="flex flex-col items-center justify-center text-center py-12 px-4 space-y-6"
-                    id="contact-form-success-overlay"
-                  >
-                    <div className="w-16 h-16 bg-gold-500 text-white rounded-full flex items-center justify-center shadow-lg shadow-gold-500/20">
-                      <CheckCircle size={36} />
-                    </div>
-                    <div className="space-y-2">
-                      <h3 className="font-display text-2xl font-bold text-slate-900">Uspješno poslano!</h3>
-                      <p className="font-sans text-sm text-slate-600 max-w-sm leading-relaxed">
-                        Zahvaljujemo se na Vašem povjerenju. Naš koordinator za kućnu njegu u Tuzli će Vas kontaktirati telefonskim putem u najkraćem roku (obično unutar 2 sata).
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-gold-600 font-semibold uppercase tracking-wider bg-gold-50 border border-gold-100 px-4 py-2 rounded-full">
-                      <Heart size={12} className="fill-gold-500 text-gold-500 animate-pulse" />
-                      <span>Golden Care tim je tu za Vas</span>
-                    </div>
-                    <button
-                      onClick={() => setIsSubmitted(false)}
-                      className="text-xs font-bold uppercase tracking-wider text-slate-400 hover:text-gold-500 transition-colors"
-                    >
-                      Pošaljite novi upit
-                    </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+        {/* Subtle Information Card below */}
+        <div className="mt-12">
+          <div className="relative overflow-hidden rounded-[2rem] border border-gold-200/30 bg-gradient-to-r from-gold-50/40 via-white to-gold-50/20 p-8 sm:p-10 shadow-sm text-center">
+            {/* Background elements */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gold-100/10 rounded-full blur-2xl" />
+            
+            <div className="relative max-w-2xl mx-auto space-y-4">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gold-50 text-gold-500 mb-2">
+                <Heart size={20} className="fill-gold-500 text-gold-500 animate-pulse" />
+              </div>
+              <h3 className="font-display text-xl sm:text-2xl font-bold text-slate-900">
+                Imate pitanja ili trebate savjet?
+              </h3>
+              <p className="font-sans text-slate-600 font-light text-sm sm:text-base leading-relaxed">
+                Pozovite nas telefonom, pošaljite email ili nam se javite putem WhatsAppa ili Vibera. Naš tim će Vam odgovoriti u najkraćem mogućem roku.
+              </p>
+              <div className="pt-2 text-xs text-gold-600 font-semibold uppercase tracking-wider">
+                Golden Care tim je tu za Vas
+              </div>
             </div>
           </div>
         </div>
@@ -417,6 +231,7 @@ export default function Contact() {
             <span>Tuzla, Bosna i Hercegovina</span>
           </div>
         </div>
+
       </div>
     </section>
   );
