@@ -1,0 +1,5 @@
+# robots.txt for Golden Care
+User-agent: *
+Allow: /
+
+Sitemap: https://goldencare-tuzla.ba/sitemap.xml

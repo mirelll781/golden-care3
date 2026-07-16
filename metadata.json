@@ -1,0 +1,6 @@
+{
+  "name": "Golden Care",
+  "description": "Premium agencija za posredovanje i njegu starijih i nemoćnih osoba u Tuzli i širom Bosne i Hercegovine.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
