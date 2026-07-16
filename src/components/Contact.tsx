@@ -40,6 +40,8 @@ export default function Contact() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [website, setWebsite] = useState(''); // Honeypot state for spam bot detection
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const servicesList = [
     'Posredovanje pri zapošljavanju njegovatelja',
@@ -54,12 +56,29 @@ export default function Contact() {
     'Podrška tokom cijelog angažmana',
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setErrorMessage(null);
 
-    // Simulate luxury API submission
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          website, // Honeypot field
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Došlo je do greške prilikom slanja poruke.');
+      }
+
       setIsSubmitting(false);
       setIsSubmitted(true);
       // Reset form
@@ -70,7 +89,11 @@ export default function Contact() {
         message: '',
         serviceInterest: '',
       });
-    }, 1800);
+      setWebsite('');
+    } catch (err: any) {
+      setIsSubmitting(false);
+      setErrorMessage(err.message || 'Došlo je do greške prilikom povezivanja sa serverom. Molimo pokušajte ponovo.');
+    }
   };
 
   const handleInputChange = (
@@ -300,6 +323,27 @@ export default function Contact() {
                         className="px-5 py-4 rounded-2xl border border-slate-200 bg-white focus:border-gold-400 focus:ring-1 focus:ring-gold-400 focus:outline-none transition-all text-sm resize-none"
                       />
                     </div>
+
+                    {/* Honeypot field - hidden from human users */}
+                    <div className="absolute opacity-0 pointer-events-none -z-10 w-0 h-0 overflow-hidden" aria-hidden="true">
+                      <label htmlFor="website">Website URL</label>
+                      <input
+                        type="text"
+                        id="website"
+                        name="website"
+                        value={website}
+                        onChange={(e) => setWebsite(e.target.value)}
+                        tabIndex={-1}
+                        autoComplete="off"
+                      />
+                    </div>
+
+                    {/* Error Banner */}
+                    {errorMessage && (
+                      <div className="p-4 bg-rose-50 text-rose-600 rounded-2xl text-xs font-semibold border border-rose-100 flex items-center gap-2">
+                        <span>{errorMessage}</span>
+                      </div>
+                    )}
 
                     {/* Submit Button */}
                     <button
