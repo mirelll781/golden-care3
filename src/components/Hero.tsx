@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { ShieldCheck, Heart, ArrowRight, Sparkles, MapPin } from 'lucide-react';
 import Logo from './Logo';
+import heroImage from '../assets/images/hero_caregiver_elderly_1784195747242.jpg';
 
 export default function Hero() {
   const handleScrollTo = (id: string) => {
@@ -125,10 +126,11 @@ export default function Hero() {
               {/* Main Image Container */}
               <div className="absolute inset-0 rounded-[2.5rem] overflow-hidden shadow-2xl border border-gold-200/30 group">
                 <img
-                  src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&w=1200&q=80"
+                  src={heroImage}
                   alt="Golden Care Profesionalna Njega"
                   className="w-full h-full object-cover transition-transform duration-[4000ms] ease-out group-hover:scale-105"
                   referrerPolicy="no-referrer"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent opacity-80" />
               </div>

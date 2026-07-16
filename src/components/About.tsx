@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Award, Compass, Heart, MapPin, Sparkles } from 'lucide-react';
+import aboutImage from '../assets/images/about_caregiver_elderly_1784196065211.jpg';
 
 export default function About() {
   const values = [
@@ -38,10 +39,11 @@ export default function About() {
               className="relative aspect-[3/4] rounded-[2rem] overflow-hidden shadow-xl border border-gold-200/20"
             >
               <img
-                src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80"
-                alt="Golden Care toplina i pažnja"
+                src={aboutImage}
+                alt="Profesionalna i topla kućna njega starijih osoba - Golden Care"
                 className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"
+                loading="lazy"
               />
               {/* Elegant floating gradient */}
               <div className="absolute inset-0 bg-gradient-to-t from-gold-900/40 via-transparent to-transparent" />
